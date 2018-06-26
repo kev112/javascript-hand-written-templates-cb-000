@@ -1,35 +1,23 @@
-function addComment() {
-  event.preventDefault();
-  var bodyText = document.getElementById("commentText").value;
+
+function postComment() {
   var commenter = document.getElementById("commenterName").value;
+  var comment = document.getElementById("commentText").value;
 
-  var commentBody = createCommentBody(bodyText);
-  var commenterLabel = createCommenterLabel(commenter);
-  postNewComment(commentBody, commenterLabel);
-}
-function createCommentBody(comment) {
-  var bodyDiv = document.createElement("div");
-  var bodyPara = document.createElement("p");
-  bodyPara.innerHTML = comment;
-  bodyDiv.appendChild(bodyPara);
-  return bodyDiv;
-}
+  //insert comment into "comments" div in this format:
+  //<div class="comment"><p>comment</p><p>Posted By: <span class="commenter">commenter</span></p></div>
 
-function createCommenterLabel(commenter) {
-  var commenterDiv = document.createElement("div");
-  var commenterLabel = document.createElement("p");
-  commenterLabel.innerHTML = "posted by:&nbsp;";
-  var commenterName = document.createElement("span");
-  commenterName.innerHTML = commenter;
-  commenterLabel.appendChild(commenterName);
-  commenterDiv.appendChild(commenterLabel);
-  return commenterLabel;
-}
+  //create template string - THIS IS THE ONLY LINE WE HAVE TO CHANGE
+  //var commentTemplate = '<div class="comment"><p><%= comment %></p><p>Posted By: <span class="commenter"><%= commenter %></span></p></div>';
+  var commentTemplate = document.getElementById("comment-template").innerHTML;
 
-function postNewComment(body, commenter) {
+  //create template function
+  var templateFn = _.template(commentTemplate);
+
   var commentsDiv = document.getElementById("comments");
-  var newCommentDiv = document.createElement("div");
-  newCommentDiv.appendChild(body);
-  newCommentDiv.appendChild(commenter);
-  commentsDiv.appendChild(newCommentDiv);
+
+  //execute template function with JSON object for the interpolated values
+  var templateHTML = templateFn({ 'comment': comment, 'commenter': commenter });
+
+  //append rather than replace!
+  commentsDiv.innerHTML += templateHTML;
 }
