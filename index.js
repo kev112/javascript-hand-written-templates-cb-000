@@ -1,39 +1,23 @@
-function addComment() {
-  event.preventDefault();
-  var bodyText = document.getElementById("commentText").value;
+
+function postComment() {
   var commenter = document.getElementById("commenterName").value;
-<<<<<<< HEAD
-
-=======
+  var comment = document.getElementById("commentText").value;
  
->>>>>>> 19faff54b3b83401667ab4c7ea40866bbd5b95e2
-  var commentBody = createCommentBody(bodyText);
-  var commenterLabel = createCommenterLabel(commenter);
-  postNewComment(commentBody, commenterLabel);
-}
-function createCommentBody(comment) {
-  var bodyDiv = document.createElement("div");
-  var bodyPara = document.createElement("p");
-  bodyPara.innerHTML = comment;
-  bodyDiv.appendChild(bodyPara);
-  return bodyDiv;
-}
-
-function createCommenterLabel(commenter) {
-  var commenterDiv = document.createElement("div");
-  var commenterLabel = document.createElement("p");
-  commenterLabel.innerHTML = "posted by:&nbsp;";
-  var commenterName = document.createElement("span");
-  commenterName.innerHTML = commenter;
-  commenterLabel.appendChild(commenterName);
-  commenterDiv.appendChild(commenterLabel);
-  return commenterLabel;
-}
-
-function postNewComment(body, commenter) {
+  //insert comment into "comments" div in this format:
+  //<div class="comment"><p>comment</p><p>Posted By: <span class="commenter">commenter</span></p></div>
+ 
+  //create template string - THIS IS THE ONLY LINE WE HAVE TO CHANGE
+  //var commentTemplate = '<div class="comment"><p><%= comment %></p><p>Posted By: <span class="commenter"><%= commenter %></span></p></div>';
+  var commentTemplate = document.getElementById("comment-template").innerHTML;
+ 
+  //create template function
+  var templateFn = _.template(commentTemplate);
+ 
   var commentsDiv = document.getElementById("comments");
-  var newCommentDiv = document.createElement("div");
-  newCommentDiv.appendChild(body);
-  newCommentDiv.appendChild(commenter);
-  commentsDiv.appendChild(newCommentDiv);
+ 
+  //execute template function with JSON object for the interpolated values
+  var templateHTML = templateFn({ 'comment': comment, 'commenter': commenter });
+ 
+  //append rather than replace!
+  commentsDiv.innerHTML += templateHTML;
 }
